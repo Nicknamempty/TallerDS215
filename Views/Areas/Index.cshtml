@@ -4,38 +4,75 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class="row align">
+    <div class="col-md-3 col-sm-12">
+        <img src="/img/logoTaller.png" style="max-height: 90%; max-width:100%;">
+    </div>
+    <div class="col-md-9 col-sm-12 mb-5">
+        <h1 class="mb-3">Areas de trabajo</h1>
+        <p>
+            <a class="btn btn-outline-primary font-weight-bold rounded-pill" asp-action="Create">Crear Area</a>
+        </p>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
+        <form class="form-inline" asp-action="Index" method="get">
+            <input class="col-md-7 col-sm-12 mr-sm-2 mb-2" type="text" placeholder="Ingrese el nombre o id del area" data-val="true" data-val-required="Es necesario escribir un area" id="c_nombre" name="Buscar" value="@ViewData["FiltroB"]">
+            <input type="submit" class="col-md-2 col-sm-12 btn btn-block btn-primary rounded-pill mb-2" value="Buscar">
+            <input name="__RequestVerificationToken" type="hidden" value="">
+        </form>
+        <br />
+        <a asp-action="Index">Todas las areas</a>
+
+    </div>
+</div>
+<table class="table ">
+    <thead class="text-center thead-dark">
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.AreaNombre)
+            <th >
+              <a asp-action="Index" asp-route-OrdenA="@ViewData["OrdeID"]"> @Html.DisplayNameFor(model => model.AreaNombre)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
+             <a asp-action="Index" asp-route-OrdenA="@ViewData["OrdeNom"]">  @Html.DisplayNameFor(model => model.Descripcion)</a>
             </th>
-            <th></th>
+            <th>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Ordenar Por:
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" asp-action="Index" asp-route-OrdenA="@ViewData["OrdeID"]">Código de area</a>
+                        <a class="dropdown-item" asp-action="Index" asp-route-OrdenA="@ViewData["OrdeNom"]">Nombre de area</a>
+                        
+                    </div>
+                </div>
+            </th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.AreaNombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.AreaID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.AreaID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.AreaID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AreaID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AreaNombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descripcion)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.AreaID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.AreaID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.AreaID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+@if (!Model.Any())
+{
+    <p>
+        <h1 class="text-center">No se encontraron datos</h1>
+        <h4 class="text-center">¿por qué no agregamos algunos? <span><a asp-action="Create"></a>agregar</span></h4>
+    </p>
+}

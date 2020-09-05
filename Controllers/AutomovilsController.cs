@@ -20,9 +20,36 @@ namespace TallerDS215.Controllers
         }
 
         // GET: Automovils
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string OrdenA,string Buscar)
         {
-            return View(await _context.Automovil.ToListAsync());
+            ViewData["OrdePlaca"] = String.IsNullOrEmpty(OrdenA) ? "placa_desc" : "";
+            ViewData["OrdeDuenio"] = OrdenA == "dueño_asc" ? "apellido_desc" : "apellido_asc";
+
+            var auto = from s in _context.Automovil select s;
+
+            if(!String.IsNullOrEmpty(Buscar))
+            {
+                auto = auto.Where(s => s.placa.Contains(Buscar) || s.cliente.Contains(Buscar));
+            }
+            switch(OrdenA)
+            {
+                case "placa_desc":
+                    auto = auto.OrderByDescending(s => s.placa);
+                    break;
+                case "dueño_asc":
+                    auto = auto.OrderBy(s => s.cliente);
+                    break;
+                case "dueño_desc":
+                    auto = auto.OrderByDescending(s => s.cliente);
+                    break;
+                default:
+                    auto = auto.OrderBy(s => s.placa);
+                    break;
+            }
+            return View(await auto.AsNoTracking().ToListAsync());
+
+
+            //return View(await _context.Automovil.ToListAsync());
         }
 
         // GET: Automovils/Details/5

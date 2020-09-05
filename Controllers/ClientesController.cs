@@ -20,9 +20,46 @@ namespace TallerDS215.Controllers
         }
 
         // GET: Clientes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(String OrdenA, string Buscar)
         {
-            return View(await _context.Cliente.ToListAsync());
+            ViewData["OrdeNom"]  = String.IsNullOrEmpty(OrdenA) ? "nombre_desc" : "";
+            ViewData["OrdeApell"] = OrdenA=="apellido_asc" ? "apellido_desc" : "apellido_asc";
+            ViewData["OrdeCorreo"] = OrdenA == "correo_asc" ? "correo_desc" : "correo_asc";
+            //ViewData["OrdeAntigue"] = OrdenA == "fecha_asc" ? "fecha_desc" : "fecha_desc";
+            //podríamos agregar la fecha en la que se crea los clientes y poder hacer algo con su fideldiad
+            ViewData["FiltroB"] = Buscar;
+
+            var cliente = from s in _context.Cliente select s;
+            if (!String.IsNullOrEmpty(Buscar))
+            {
+                cliente = cliente.Where(s => s.nombre.Contains(Buscar) || s.apellido.Contains(Buscar) || s.DUI.Contains(Buscar));
+            }
+
+            
+            switch (OrdenA)
+            {
+                case "nombre_desc":
+                    cliente = cliente.OrderBy(s => s.nombre);
+                    break;
+                case "apellido_asc":
+                    cliente = cliente.OrderBy(s => s.apellido);
+                    break;
+                case "apellido_desc":
+                    cliente = cliente.OrderByDescending(s => s.apellido);
+                    break;
+                case "correo_asc":
+                    cliente = cliente.OrderBy(s => s.correo);
+                    break;
+                case "correo_desc":
+                    cliente = cliente.OrderByDescending(s => s.correo);
+                    break;
+                default:
+                    cliente = cliente.OrderBy(s => s.nombre);
+                    break;
+            }
+
+            return View(await cliente.AsNoTracking().ToListAsync());
+           // return View(await _context.Cliente.ToListAsync());
         }
 
         // GET: Clientes/Details/5

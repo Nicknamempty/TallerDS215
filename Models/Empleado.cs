@@ -27,12 +27,15 @@ namespace TallerDS215.Models
         public double salario { get; set; }
         [Required(ErrorMessage = "Campo requerido")]
         [ForeignKey("modoPagoID")]
+        [Display(Name ="Pago")]
         public int modPago { get; set; }
         [Required(ErrorMessage = "Campo requerido")]
         [ForeignKey("AreaID")]
+        [Display(Name ="Area")]
         public int Area { get; set; }
         [Required(ErrorMessage = "Campo requerido")]
         [ForeignKey("rolID")]
+        [Display(Name ="Rol")]
         public int rol { get; set; }
 
         public Imagen Img { get; set; }

@@ -20,9 +20,64 @@ namespace TallerDS215.Controllers
         }
 
         // GET: Empleadoes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string OrdenA, string Buscar)
         {
-            return View(await _context.Empleado.ToListAsync());
+            ViewData["OrdeNom"] = String.IsNullOrEmpty(OrdenA) ? "nombre_desc" : "";
+            ViewData["OrdeApell"] = OrdenA == "apellido_asc" ? "apellido_desc" : "apellido_desc";
+            ViewData["OrdeCorreo"] = OrdenA == "correo_asc" ? "correo_desc" : "correo_desc";
+            ViewData["OrdeSalario"] = OrdenA == "salario_asc" ? "salario_desc" : "salario_desc";
+            ViewData["OrdeModPago"] = OrdenA == "pago_asc" ? "pago_desc" : "pago_desc";
+            ViewData["OrdeArea"] = OrdenA == "area_asc" ? "area_desc" : "area_desc";
+            ViewData["OrdeRol"] = OrdenA == "rol_asc" ? "rol_desc" : "rol_desc";
+            ViewData["FiltroB"] = Buscar;
+
+            var empleado = from s in _context.Empleado select s;
+            if (!String.IsNullOrEmpty(Buscar))
+            {
+                empleado = empleado.Where(s => s.nombre.Contains(Buscar) || s.apellido.Contains(Buscar) || s.DUI.Contains(Buscar));
+            }
+            switch (OrdenA)
+            {
+                case "nombre_desc":
+                    empleado = empleado.OrderBy(s => s.nombre);
+                    break;
+                case "apellido_asc":
+                    empleado = empleado.OrderBy(s => s.apellido);
+                    break;
+                case "apellido_desc":
+                    empleado = empleado.OrderByDescending(s => s.apellido);
+                    break;
+                case "correo_asc":
+                    empleado = empleado.OrderBy(s => s.correo);
+                    break;
+                case "correo_desc":
+                    empleado = empleado.OrderByDescending(s => s.correo);
+                    break;
+                case "salario_asc":
+                    empleado = empleado.OrderBy(s => s.salario);
+                    break;
+                case "salario_desc":
+                    empleado = empleado.OrderByDescending(s => s.salario);
+                    break;
+                case "area_asc":
+                    empleado = empleado.OrderBy(s => s.Area);
+                    break;
+                case "area_desc":
+                    empleado = empleado.OrderByDescending(s => s.Area);
+                    break;
+                case "rol_asc":
+                    empleado = empleado.OrderBy(s => s.rol);
+                    break;
+                case "rol_desc":
+                    empleado = empleado.OrderByDescending(s => s.rol);
+                    break;
+                default:
+                    empleado = empleado.OrderBy(s => s.nombre);
+                    break;
+            }
+
+            return View(await empleado.AsNoTracking().ToListAsync());
+            //return View(await _context.Empleado.ToListAsync());
         }
 
         // GET: Empleadoes/Details/5

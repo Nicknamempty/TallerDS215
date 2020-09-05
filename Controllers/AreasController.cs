@@ -20,9 +20,32 @@ namespace TallerDS215.Controllers
         }
 
         // GET: Areas
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string OrdenA,string Buscar)
         {
-            return View(await _context.Area.ToListAsync());
+            ViewData["OrdeID"] = String.IsNullOrEmpty(OrdenA) ? "id_desc" : "";
+            ViewData["OrdeNom"] = OrdenA == "nombre_asc" ? "nombre_desc" : "nombre_asc";
+           
+            var area = from s in _context.Area select s;
+
+
+
+            if (!String.IsNullOrEmpty(Buscar))
+            {
+                area = area.Where(s => s.AreaID.ToString().Contains(Buscar) || s.AreaNombre.Contains(Buscar));
+            }
+            switch(OrdenA)
+            {
+                case "id_desc":
+                    area = area.OrderByDescending(s => s.AreaID);
+                    break;
+                case "nombre_asc":
+                    area = area.OrderBy(s => s.AreaNombre);
+                    break;
+                default:
+                    area = area.OrderBy(s => s.AreaID);
+                    break;
+            }
+            return View(await area.AsNoTracking().ToListAsync());
         }
 
         // GET: Areas/Details/5
