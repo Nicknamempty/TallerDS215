@@ -16,7 +16,7 @@ namespace TallerDS215.Models
         public string marca { get; set; }
         [Required(ErrorMessage = "Campo requerido")]
         public string modelo { get; set; }
-        [StringLength(4,ErrorMessage ="El año debe ser de cuatro digitos",MinimumLength =4)]
+       // [StringLength(4,ErrorMessage ="El año debe ser de cuatro digitos",MinimumLength =4)]
         public int año { get; set; }
         [Required(ErrorMessage = "Campo requerido")]
         public string Estado { get; set; }

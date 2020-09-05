@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,10 +34,13 @@ namespace TallerDS215
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddDbContext<TallerDS215Context>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("TallerDS215Context")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,TallerDS215Context context)
         {
             if (env.IsDevelopment())
             {
@@ -65,6 +68,7 @@ namespace TallerDS215
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+            Dbinit.Ini(context);
         }
     }
 }
